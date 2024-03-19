@@ -27,9 +27,13 @@ YouTube Data API key for data harvesting.
 # Built with
 
 Python - The core programming language used for data harvesting, processing, and analysis.
+
 Streamlit - Utilized for creating a user-friendly web application to interact with the data.
+
 MongoDB - Employed for storing non-relational data, offering flexibility in data structure and rapid development.
+
 PostgreSQL - Used for structured data warehousing, supporting complex queries and data integrity.
+
 Pandas and NumPy - Python libraries for data manipulation and numerical calculations, facilitating easier data analysis.
   
 # Required Libraries
