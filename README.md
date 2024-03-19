@@ -51,9 +51,13 @@ Pandas and NumPy - Python libraries for data manipulation and numerical calculat
 # Features
 
 Data Harvesting: Leverages the YouTube Data API to collect detailed information about videos, comments, user statistics, and more, focusing on specific channels or topics.
+
 Data Processing and Normalization: Utilizes Python for data cleaning, processing, and normalization, preparing the data for analysis and storage.
+
 Flexible Data Storage with MongoDB: Stores unstructured or semi-structured data, like comments and video metadata, in MongoDB, allowing for flexible schema and easy scalability.
+
 Structured Data Warehousing with PostgreSQL: Utilizes PostgreSQL for storing structured data, such as video statistics, for complex queries and analysis.
-Interactive Web Interface: Features a Streamlit-based web application, making it easy for users to query data, view analytics, and generate reports dynamically.
-Automated Data Updates: Includes scheduling capabilities for automated data harvesting and updating, ensuring the dataset remains current.
+
+Interactive Web Interface: Features a Streamlit-based web application, making it easy for users to query data, view analytics, and generate reports dynamically
+
 Analytics and Reporting: Provides basic analytics and customizable reports on the harvested data, leveraging both MongoDB and PostgreSQL for comprehensive insights.
