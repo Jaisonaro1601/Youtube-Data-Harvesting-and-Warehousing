@@ -3,6 +3,7 @@ import pymongo
 import psycopg2
 import pandas as pd
 import streamlit as st
+import plotly.express as px
 
 def Api_connect():
     Api_Id="AIzaSyD4oryTRaxFeCbw3DDzdw870lg0o1Bk_WM"
@@ -454,15 +455,87 @@ def show_comments_table():
     df3=st.dataframe(com_list)
     return df3
 
-#streamlit
-with st.sidebar:
-    st.title(":red[YOUTUBE DATA HAVERSTING AND WAREHOUSING]")
-    st.header("Skill Take Away")
-    st.caption("Python Scripting")
-    st.caption("Data Collection")
-    st.caption("MongoDB")
-    st.caption("API Integration")
-    st.caption("Data Management using MongoDB and SQL")
+st.markdown("""
+<style>
+/* Background color for the entire page */
+body, .stApp {
+    background-color: #ff3b3b!important;
+}
+
+/* Sidebar styling */
+.css-1d391kg {
+    background-color: #f5f5f5;
+}
+
+/* Title color in the sidebar */
+.css-1aumxhk {
+    color: #ff4b4b;
+}
+
+/* Custom button styling */
+.stButton>button {
+    border: 2px solid #4f8bf9;
+    border-radius: 20px;
+    color: #ffffff;
+    background-color: #4f8bf9;
+}
+
+/* Text input styling */
+.stTextInput>div>div>input {
+    border-radius: 20px;
+}
+
+/* Customize radio buttons */
+.stRadio>div>div {
+    background-color: #e0e0e0;
+    border-radius: 20px;
+    padding: 5px;
+}
+
+/* Override default anchor color for better visibility */
+a {
+    color: #4f8bf9;
+}
+
+/* Custom CSS for markdown text to change font-size */
+.markdown-text-container {
+    font-size: 16px;
+}
+</style>
+""", unsafe_allow_html=True)
+style = """
+<style>
+    /* Injecting custom CSS for header */
+    .header-style {
+        color: #000000;  /* White text color */
+        font-size: 24px;
+        font-weight: bold; /* Increase font size */
+        
+    }
+
+    /* Custom styling for markdown text to make it lighter */
+    .markdown-style {
+        color: #000000; /* Light gray text color for better readability on dark backgrounds */
+        font-size: 20px;
+        font-weight: bold; /* Adjust font size as needed */
+    }
+</style>
+"""
+st.markdown(style, unsafe_allow_html=True)
+
+# Use the custom classes with your header and markdown text
+st.markdown('<p class="header-style">YouTube Data Analyzer</p>', unsafe_allow_html=True)
+st.markdown('<p class="markdown-style">Welcome to the YouTube Data Analyzer. Please select an option from the sidebar to get started.</p>', unsafe_allow_html=True)
+
+# #streamlit
+# with st.sidebar:
+#     st.title(":red[YOUTUBE DATA HAVERSTING AND WAREHOUSING]")
+#     st.header("Skill Take Away")
+#     st.caption("Python Scripting")
+#     st.caption("Data Collection")
+#     st.caption("MongoDB")
+#     st.caption("API Integration")
+#     st.caption("Data Management using MongoDB and SQL")
 
 channel_id=st.text_input("Enter the channel ID") 
 if st.button("collect and store data"):
@@ -536,7 +609,20 @@ elif question =="2. channels with most number of videos":
     t2=cursor.fetchall()
     df2=pd.DataFrame(t2,columns=["channel name","No of Videos"])
     st.write(df2)
+    fig = px.bar(df2, x='channel name', y='No of Videos', color='No of Videos', title="Channels with Most Number of Videos")
 
+# Set background and paper colors
+    fig.update_layout({
+    'plot_bgcolor': 'rgba(0, 0, 0, 0)',  # Transparent background for the plot
+    'paper_bgcolor': 'rgba(0, 0, 0, 0)',  # Transparent background outside the plot
+    })
+
+# If you want a solid color instead of transparent, replace 'rgba(0, 0, 0, 0)' with your desired color, e.g., 'rgba(255, 255, 255, 1)' for white.
+
+    st.plotly_chart(fig, use_container_width=True)
+    
+
+   
 elif question =="3. 10 most viewed videos":
     query3='''select views as views, channel_name as channelname , title as videotitle from videos where views is not null order by  views desc limit 10 '''
     cursor.execute(query3)
@@ -544,6 +630,12 @@ elif question =="3. 10 most viewed videos":
     t3=cursor.fetchall()
     df3=pd.DataFrame(t3,columns=["views","channel name","videotitle"])
     st.write(df3)
+    fig = px.bar(df3, x='videotitle', y='views', color='channel name',title="10 Most Viewed Videos")
+    fig.update_layout({
+    'plot_bgcolor': 'rgba(0, 0, 0, 0)',  # Transparent background for the plot
+    'paper_bgcolor': 'rgba(0, 0, 0, 0)',  # Transparent background outside the plot
+    })
+    st.plotly_chart(fig, use_container_width=True)
 
 elif question=="4. comments in each videos":
     query4='''select comments as no_comments,title as videotitle from videos where comments is not null'''
@@ -560,6 +652,24 @@ elif question =="5. Videos with higest likes":
     t5=cursor.fetchall()
     df5=pd.DataFrame(t5,columns=["videotitle","chennalename","likecount"])
     st.write(df5)
+    fig = px.bar(df5.head(10),  # Show top 10 videos for clarity
+             y='videotitle',
+             x='likecount',
+             color='likecount',
+             labels={'likecount': 'Likes', 'videotitle': 'Video Title'},
+             title="Top 10 Videos with Highest Likes",
+             orientation='h',  # Horizontal bar chart
+             height=600,  # Adjust height to accommodate the titles
+             )
+
+    fig.update_layout(yaxis={'categoryorder': 'total ascending'},  # Sort bars by ascending order of likes
+                  plot_bgcolor='rgba(0, 0, 0, 0)',  # Transparent plot background
+                  paper_bgcolor='rgba(0, 0, 0, 0)',  # Transparent paper background
+                  )
+
+    fig.update_traces(marker_color='rgb(255, 159, 64)', opacity=0.6)  # Custom bar color and opacity
+
+    st.plotly_chart(fig, use_container_width=True)
 
 elif question =="6. likes of all videos":
     query6='''select likes as likecount, title as videotitle from videos'''
@@ -568,6 +678,20 @@ elif question =="6. likes of all videos":
     t6=cursor.fetchall()
     df6=pd.DataFrame(t6,columns=["likecount","videotitle"])
     st.write(df6)
+    fig = px.scatter(df6, x='videotitle', y='likecount',
+                 title="Likes of All Videos",
+                 labels={"videotitle": "Video Title", "likecount": "Likes"})
+
+    # Improve readability:
+    fig.update_layout(xaxis_title="Video Title",
+                  yaxis_title="Likes",
+                  xaxis={'categoryorder':'total descending'},  # This line sorts videos if needed; remove if not desired
+                  xaxis_tickangle=-45,  # Rotate labels for better readability
+                  plot_bgcolor='rgba(0, 0, 0, 0)',  # Optional: Transparent background for the plot
+                  paper_bgcolor='rgba(0, 0, 0, 0)')  # Optional: Transparent background outside the plot
+
+    # Display the plot in the app
+    st.plotly_chart(fig, use_container_width=True)
 
 elif question=="7. views of each channel":
     query7='''select channel_name as channelname ,views as totalviews from channels'''
@@ -576,6 +700,12 @@ elif question=="7. views of each channel":
     t7=cursor.fetchall()
     df7=pd.DataFrame(t7,columns=["channel name","totalviews"])
     st.write(df7)
+    fig = px.pie(df7, names='channel name', values='totalviews',title="Views Distribution Among Channels")
+    fig.update_layout({
+    'plot_bgcolor': 'rgba(0, 0, 0, 0)',  # Transparent background for the plot
+    'paper_bgcolor': 'rgba(0, 0, 0, 0)',  # Transparent background outside the plot
+    })
+    st.plotly_chart(fig, use_container_width=True)
 
 elif question=="8. videos published in the year of 2022":
     query8='''select title as video_title,published_date as videorelease,channel_name as channelname from videos
@@ -610,6 +740,12 @@ elif question=="10. videos with highest number of comments":
     t10=cursor.fetchall()
     df10=pd.DataFrame(t10,columns=["video title","channel name","comments"])
     st.write(df10)
+    fig = px.bar(df10, x='video title', y='comments', color='channel name',title="Videos with Highest Number of Comments")
+    fig.update_layout({
+    'plot_bgcolor': 'rgba(0, 0, 0, 0)',  # Transparent background for the plot
+    'paper_bgcolor': 'rgba(0, 0, 0, 0)',  # Transparent background outside the plot
+    })
+    st.plotly_chart(fig, use_container_width=True)
 
 
 
